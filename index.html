@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Квест: После уроков — мобильная версия</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px; /* уменьшен для мобильных */
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 1200px;
+            min-height: 700px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar h2 {
+            color: #ecf0f1;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .activity-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 15px 12px;
+            border-radius: 12px; /* чуть больше для touch */
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px; /* базовый чуть больше */
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-align: left;
+            position: relative;
+            -webkit-tap-highlight-color: transparent; /* убираем серый фон при тапе */
+            touch-action: manipulation; /* оптимизация касания */
+        }
+
+        .activity-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(5px);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .activity-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .activity-btn.completed {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            border-color: #00b894;
+        }
+
+        .activity-btn.attempted {
+            background: linear-gradient(135deg, #fdcb6e 0%, #f39c12 100%);
+            border-color: #f39c12;
+        }
+
+        .activity-btn .status-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px; /* крупнее для touch */
+        }
+
+        .exit-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border: none;
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px; /* крупнее */
+            font-weight: 600;
+            margin-top: auto;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+            touch-action: manipulation;
+        }
+
+        .exit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
+        }
+
+        .main-area {
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .main-image {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .class-label {
+            position: absolute;
+            bottom: 40px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2c3e50;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .preview-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 260px;
+            height: 170px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .preview-image.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* Модальные окна */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+            padding: 10px; /* чтобы модалка не прилипала к краям на телефоне */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            border-radius: 24px;
+            width: 100%;
+            max-width: 1000px;
+            height: 90vh;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            animation: slideUp 0.2s ease;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-content.fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            border-radius: 0 !important;
+            border: none !important;
+            animation: none !important;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.3;
+            padding-right: 10px;
+        }
+
+        .modal-close, .modal-expand {
+            background: rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.5);
+            color: white;
+            width: 44px; /* увеличен для touch */
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+            backdrop-filter: blur(2px);
+            touch-action: manipulation;
+        }
+
+        .modal-expand:hover, .modal-close:hover {
+            background: rgba(255,255,255,0.5);
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            background: white;
+        }
+
+        .game-frame {
+            width: 100%;
+            flex: 1;
+            border: 2px solid rgba(212, 165, 255, 0.5);
+            border-radius: 12px;
+            background: #f0f0f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-height: 250px; /* гарантия видимости */
+        }
+
+        .modal-body > div {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-shrink: 0;
+            flex-wrap: wrap; /* на мобильных перенос */
+        }
+
+        /* Кнопки выполнения в модалке */
+        .ending-btn {
+            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.5);
+            touch-action: manipulation;
+            border: 1px solid rgba(255,255,255,0.3);
+            flex: 1 1 auto;
+            min-width: 160px; /* чтобы не сжимались слишком */
+        }
+
+        .ending-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.7);
+        }
+
+        /* Финал */
+        .ending-modal {
+            text-align: center;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .ending-image {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .ending-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ending-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            max-width: 400px;
+        }
+
+        .progress-indicator {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #d4a5ff 0%, #c084fc 100%);
+            padding: 8px 14px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(192, 132, 252, 0.5);
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 0 8px rgba(255,255,255,0.5);
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 14px;
+            z-index: 5;
+        }
+
+        .activity-type {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
+        @media (max-width: 768px) {
+            .game-container {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                border-radius: 24px;
+            }
+
+            .sidebar {
+                flex-direction: column; /* вертикально на очень маленьких */
+                padding: 20px 15px;
+                gap: 10px;
+            }
+
+            .sidebar h2 {
+                margin-bottom: 10px;
+                font-size: 20px;
+            }
+
+            .activity-btn {
+                width: 100%;
+                font-size: 16px;
+                padding: 16px 15px;
+                border-radius: 14px;
+            }
+
+            .exit-btn {
+                width: 100%;
+                font-size: 20px;
+                padding: 18px;
+                margin-top: 15px;
+            }
+
+            .main-area {
+                padding: 20px 15px 30px;
+                min-height: 350px;
+            }
+
+            .main-image {
+                height: 250px;
+                max-width: 100%;
+            }
+
+            .class-label {
+                bottom: 30px;
+                left: 20px;
+                font-size: 14px;
+                padding: 5px 14px;
+            }
+
+            .preview-image {
+                display: none; /* на мобильных превью может мешать, убираем */
+            }
+
+            .progress-indicator {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+
+            /* модалки на мобильных */
+            .modal-overlay {
+                padding: 0; /* убираем отступы, чтобы модалка заняла весь экран */
+            }
+
+            .modal-content {
+                width: 100%;
+                height: 100%;
+                max-height: 100vh;
+                border-radius: 0; /* на всю ширину */
+                border: none;
+                animation: none;
+            }
+
+            .modal-header {
+                padding: 12px 16px;
+            }
+
+            .modal-header h3 {
+                font-size: 18px;
+            }
+
+            .modal-close, .modal-expand {
+                width: 48px;
+                height: 48px;
+                font-size: 28px;
+            }
+
+            .modal-body {
+                padding: 16px;
+            }
+
+            .game-frame {
+                border-radius: 8px;
+                min-height: 300px;
+            }
+
+            .modal-body > div {
+                flex-direction: column; /* кнопки друг под другом */
+                gap: 8px;
+            }
+
+            .ending-btn {
+                width: 100%;
+                padding: 18px;
+                font-size: 18px;
+            }
+
+            .ending-modal {
+                padding: 20px 15px;
+            }
+
+            .ending-image {
+                width: 130px;
+                height: 130px;
+            }
+
+            .ending-title {
+                font-size: 24px;
+            }
+
+            .ending-text {
+                font-size: 15px;
+            }
+        }
+
+        /* очень маленькие экраны (до 400px) */
+        @media (max-width: 400px) {
+            .sidebar {
+                padding: 15px 10px;
+            }
+
+            .activity-btn {
+                font-size: 14px;
+                padding: 14px 10px;
+            }
+
+            .exit-btn {
+                font-size: 18px;
+                padding: 16px;
+            }
+
+            .main-image {
+                height: 200px;
+            }
+
+            .class-label {
+                bottom: 20px;
+                left: 15px;
+                font-size: 12px;
+            }
+
+            .progress-indicator {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+        }
+
+        /* альбомная ориентация на телефонах */
+        @media (max-width: 896px) and (orientation: landscape) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                padding: 12px;
+            }
+
+            .activity-btn {
+                width: auto;
+                flex: 1 1 30%;
+                min-width: 160px;
+            }
+
+            .exit-btn {
+                width: auto;
+                flex: 0 1 auto;
+                padding: 14px 25px;
+                margin-top: 0;
+            }
+
+            .main-image {
+                height: 200px;
+            }
+
+            .modal-content {
+                height: 95vh;
+            }
+
+            .modal-body > div {
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="sidebar">
+            <h2>📚 Задания</h2>
+            
+            <button class="activity-btn" data-type="board" data-activity="match">
+                Match the texts
+                <div class="activity-type">У доски</div>
+                <span class="status-icon"></span>
+            </button>
+
+            <button class="activity-btn" data-type="board" data-activity="reading">
+                Reading TRUE/FALSE/NOT STATED
+                <div class="activity-type">У доски</div>
+                <span class="status-icon"></span>
+            </button>
+
+            <button class="activity-btn" data-type="board" data-activity="grammar">
+                GRAMMAR
+                <div class="activity-type">У доски</div>
+                <span class="status-icon"></span>
+            </button>
+
+            <button class="activity-btn" data-type="tablet" data-activity="word">
+                Word formation
+                <div class="activity-type">На планшете</div>
+                <span class="status-icon"></span>
+            </button>
+
+            <button class="activity-btn" data-type="tablet" data-activity="email">
+                Email
+                <div class="activity-type">На планшете</div>
+                <span class="status-icon"></span>
+            </button>
+
+            <button class="activity-btn" data-type="tablet" data-activity="assistant">
+                Electronic Assistant
+                <div class="activity-type">На планшете</div>
+                <span class="status-icon"></span>
+            </button>
+
+            <button class="activity-btn" data-type="tablet" data-activity="monologues">
+                Monologues
+                <div class="activity-type">На планшете</div>
+                <span class="status-icon"></span>
+            </button>
+
+            <button class="activity-btn" data-type="phone" data-activity="play">
+                🎮 Поиграть в телефоне
+                <span class="status-icon"></span>
+            </button>
+
+            <button class="exit-btn" id="exitBtn">
+                🚪 Выйти из класса
+            </button>
+        </div>
+
+        <div class="main-area">
+            <div class="progress-indicator">
+                Выполнено: <span id="completedCount">0</span>/7
+            </div>
+            
+            <img src="images/class.jpg" alt="Класс" class="main-image" id="mainImage">
+            <div class="class-label">🏫 Класс</div>
+            
+            <img src="" alt="Preview" class="preview-image" id="previewImage">
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div class="modal-overlay" id="gameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Задание</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button class="modal-expand" onclick="toggleFullscreen()" aria-label="Развернуть">⛶</button>
+                    <button class="modal-close" onclick="closeGameModal()" aria-label="Закрыть">×</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <iframe class="game-frame" id="gameFrame" src="" title="Игровое задание"></iframe>
+                <div>
+                    <button class="ending-btn" onclick="completeActivity(false)">❌ Не выполнил</button>
+                    <button class="ending-btn" onclick="completeActivity(true)">✅ Выполнил</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ending Modal -->
+    <div class="modal-overlay" id="endingModal">
+        <div class="modal-content">
+            <div class="ending-modal">
+                <img src="" alt="Ending" class="ending-image" id="endingImage">
+                <h2 class="ending-title" id="endingTitle"></h2>
+                <p class="ending-text" id="endingText"></p>
+                <button class="ending-btn" onclick="restartGame()">🔄 Начать заново</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            activities: {
+                match: { type: 'board', completed: false, attempted: false, score: 0 },
+                reading: { type: 'board', completed: false, attempted: false, score: 0 },
+                grammar: { type: 'board', completed: false, attempted: false, score: 0 },
+                word: { type: 'tablet', completed: false, attempted: false, score: 0 },
+                email: { type: 'tablet', completed: false, attempted: false, score: 0 },
+                assistant: { type: 'tablet', completed: false, attempted: false, score: 0 },
+                monologues: { type: 'tablet', completed: false, attempted: false, score: 0 },
+                play: { type: 'phone', completed: false, attempted: false, score: 0 }
+            },
+            currentActivity: null
+        };
+
+        // Activity URLs
+        const activityUrls = {
+            match: 'tasks/match the texts.html',
+            reading: 'tasks/true false not stated.html',
+            grammar: 'tasks/grammar.html',
+            word: 'tasks/word formation.html',
+            email: 'tasks/email.html',
+            assistant: 'tasks/electronic assistant.html',
+            monologues: 'tasks/monologue.html',
+            play: 'tasks/space.html'
+        };
+
+        // Preview Images (отключены на мобильных, но оставим)
+        const previewImages = {
+            match: 'images/match-texts.jpg',
+            reading: 'images/true-false.jpg',
+            grammar: 'images/grammar.jpg',
+            word: 'images/word-formation.jpg',
+            email: 'images/emails.jpg',
+            assistant: 'images/electronic-assistant.jpg',
+            monologues: 'images/monologues.jpg'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeButtons();
+            updateProgress();
+        });
+
+        function initializeButtons() {
+            const buttons = document.querySelectorAll('.activity-btn');
+            const previewImage = document.getElementById('previewImage');
+
+            buttons.forEach(btn => {
+                const activity = btn.dataset.activity;
+                const type = btn.dataset.type;
+
+                // hover preview - работает только на устройствах с мышью, на мобильных игнор
+                if (previewImages[activity] && window.matchMedia('(hover: hover)').matches) {
+                    btn.addEventListener('mouseenter', () => {
+                        previewImage.src = previewImages[activity];
+                        previewImage.classList.add('show');
+                    });
+
+                    btn.addEventListener('mouseleave', () => {
+                        previewImage.classList.remove('show');
+                    });
+                }
+
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!btn.disabled) {
+                        openGameModal(activity);
+                    }
+                });
+            });
+
+            document.getElementById('exitBtn').addEventListener('click', handleExit);
+        }
+
+        function openGameModal(activity) {
+            gameState.currentActivity = activity;
+            const modal = document.getElementById('gameModal');
+            const title = document.getElementById('modalTitle');
+            const frame = document.getElementById('gameFrame');
+
+            const activityNames = {
+                match: 'Match the texts',
+                reading: 'Reading TRUE/FALSE/NOT STATED',
+                grammar: 'GRAMMAR',
+                word: 'Word formation',
+                email: 'Email',
+                assistant: 'Electronic Assistant',
+                monologues: 'Monologues',
+                play: 'Игра в телефоне'
+            };
+
+            title.textContent = activityNames[activity];
+            frame.src = activityUrls[activity];
+            modal.classList.add('active');
+
+            if (activity !== 'play') {
+                gameState.activities[activity].attempted = true;
+            } else {
+                gameState.activities[activity].completed = true;
+            }
+
+            updateButtonStates();
+        }
+
+        function closeGameModal() {
+            const modal = document.getElementById('gameModal');
+            const frame = document.getElementById('gameFrame');
+            const modalContent = document.querySelector('#gameModal .modal-content');
+            modalContent.classList.remove('fullscreen');
+            frame.src = '';
+            modal.classList.remove('active');
+            gameState.currentActivity = null;
+        }
+
+        function toggleFullscreen() {
+            const modalContent = document.querySelector('#gameModal .modal-content');
+            modalContent.classList.toggle('fullscreen');
+        }
+
+        function completeActivity(success) {
+            const activity = gameState.currentActivity;
+            if (activity && activity !== 'play') {
+                gameState.activities[activity].completed = success;
+                gameState.activities[activity].score = success ? 100 : 50;
+            }
+
+            closeGameModal();
+            updateButtonStates();
+            updateProgress();
+        }
+
+        function updateButtonStates() {
+            const buttons = document.querySelectorAll('.activity-btn');
+
+            buttons.forEach(btn => {
+                const activity = btn.dataset.activity;
+                const state = gameState.activities[activity];
+                const icon = btn.querySelector('.status-icon');
+
+                btn.classList.remove('completed', 'attempted');
+
+                if (state.completed && state.score === 100) {
+                    btn.classList.add('completed');
+                    btn.disabled = true;
+                    icon.textContent = '✓';
+                } else if (state.attempted || state.completed) {
+                    btn.classList.add('attempted');
+                    icon.textContent = '○';
+                } else {
+                    icon.textContent = '';
+                }
+            });
+        }
+
+        function updateProgress() {
+            const completed = Object.values(gameState.activities).filter(a => a.completed && a.score === 100).length;
+            document.getElementById('completedCount').textContent = completed;
+        }
+
+        function handleExit() {
+            const activities = gameState.activities;
+            const completedSuccessfully = Object.values(activities).filter(a => a.completed && a.score === 100 && a.type !== 'phone').length;
+            const attempted = Object.values(activities).filter(a => a.attempted || (a.completed && a.type !== 'phone')).length;
+            const played = activities.play.completed;
+
+            let endingType = 'bad';
+
+            if (completedSuccessfully >= 5) {
+                endingType = 'good';
+            } else if (attempted > 0) {
+                endingType = 'medium';
+            } else if (played && attempted === 0) {
+                endingType = 'bad';
+            }
+
+            showEnding(endingType);
+        }
+
+        function showEnding(type) {
+            const modal = document.getElementById('endingModal');
+            const image = document.getElementById('endingImage');
+            const title = document.getElementById('endingTitle');
+            const text = document.getElementById('endingText');
+
+            const endings = {
+                good: {
+                    image: 'images/cat-happy.jpg',
+                    title: 'Отличная работа!',
+                    text: 'Учительница довольна твоими успехами! Ты усердно работал над заданиями и показал хорошие результаты. В награду она гладит своего котика, и ты можешь свободно идти домой. Так держать!'
+                },
+                medium: {
+                    image: 'images/teacher-neutral.jpg',
+                    title: 'Хорошая попытка',
+                    text: 'Учительница видит, что ты старался, но результаты могли быть лучше. Ты молодец, что попробовал выполнить задания, но нужно усерднее учиться. В следующий раз постарайся лучше!'
+                },
+                bad: {
+                    image: 'images/teacher-angry.jpg',
+                    title: 'Недостаточно поработал',
+                    text: 'Учительница недовольна. Ты либо только играл в телефоне, либо сразу попытался выйти из класса, не выполнив задания. Нужно остаться и хорошо поработать над материалами урока!'
+                }
+            };
+
+            const ending = endings[type];
+            image.src = ending.image;
+            title.textContent = ending.title;
+            text.textContent = ending.text;
+            modal.classList.add('active');
+        }
+
+        function restartGame() {
+            Object.keys(gameState.activities).forEach(key => {
+                gameState.activities[key] = {
+                    type: gameState.activities[key].type,
+                    completed: false,
+                    attempted: false,
+                    score: 0
+                };
+            });
+
+            document.getElementById('endingModal').classList.remove('active');
+            document.getElementById('gameModal').classList.remove('active');
+
+            updateButtonStates();
+            updateProgress();
+        }
+
+        // Закрытие модалки по клику на оверлей (кроме финала)
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay && overlay.id !== 'endingModal') {
+                    closeGameModal();
+                }
+            });
+        });
+
+        // Закрытие по ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modalContent = document.querySelector('#gameModal .modal-content');
+                if (modalContent && modalContent.classList.contains('fullscreen')) {
+                    modalContent.classList.remove('fullscreen');
+                } else {
+                    closeGameModal();
+                }
+            }
+        });
+
+        // Убираем hover-превью на тач-устройствах
+        if (window.matchMedia('(hover: none)').matches) {
+            document.getElementById('previewImage').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
