@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ОГЭ: Тексты "Time" – Задание на соответствие</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #e0f2f1;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-image: radial-gradient(#80cbc4 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+            position: relative;
+            border: 3px solid #00796b;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px dashed #00796b;
+            background: linear-gradient(90deg, #b2dfdb, #80cbc4);
+            border-radius: 15px;
+            padding: 15px;
+        }
+        
+        h1 {
+            color: #004d40;
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+        
+        .subtitle {
+            color: #00695c;
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+        
+        .emoji {
+            font-size: 1.5rem;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .instructions {
+            background-color: #b2dfdb;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 6px solid #00796b;
+            font-size: 0.95rem;
+        }
+        
+        /* Компактная сетка с вопросами и текстами */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Левая колонка - вопросы */
+        .questions-column {
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            padding: 15px;
+            border: 2px solid #00796b;
+            height: fit-content;
+        }
+        
+        .questions-title {
+            color: #004d40;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #80cbc4;
+            display: flex;
+            align-items: center;
+        }
+        
+        .question-item-compact {
+            background-color: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #26a69a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .question-number-compact {
+            background-color: #b2dfdb;
+            color: #004d40;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1rem;
+            border: 2px solid #00796b;
+            flex-shrink: 0;
+        }
+        
+        .question-text-compact {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #333;
+        }
+        
+        .answer-select {
+            width: 70px;
+            padding: 8px;
+            border: 2px solid #80cbc4;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: white;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .answer-select.correct {
+            border-color: #4caf50;
+            background-color: #e8f5e9;
+        }
+        
+        .answer-select.incorrect {
+            border-color: #f44336;
+            background-color: #ffebee;
+        }
+        
+        /* Правая колонка - тексты */
+        .texts-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .text-card-compact {
+            background-color: white;
+            border-radius: 12px;
+            border: 2px solid #00796b;
+            overflow: hidden;
+        }
+        
+        .text-header-compact {
+            background: linear-gradient(90deg, #00796b, #004d40);
+            color: white;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .text-letter-compact {
+            background-color: white;
+            color: #00796b;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        .text-content-compact {
+            padding: 15px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        
+        /* Класс для подсветки – добавляется только после проверки */
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .check-btn {
+            background: linear-gradient(90deg, #43a047, #2e7d32);
+            color: white;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(90deg, #00796b, #004d40);
+            color: white;
+        }
+        
+        .results {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: none;
+        }
+        
+        .success {
+            background: linear-gradient(90deg, #e8f5e9, #c8e6c9);
+            color: #1b5e20;
+            border: 2px solid #43a047;
+        }
+        
+        .partial {
+            background: linear-gradient(90deg, #fff3e0, #ffccbc);
+            color: #e65100;
+            border: 2px solid #ff9800;
+        }
+        
+        .unanswered-info {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #fff3e0;
+            border-radius: 8px;
+            color: #e65100;
+            font-weight: bold;
+            text-align: center;
+            border-left: 5px solid #ff9800;
+            font-size: 0.95rem;
+        }
+        
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="emoji">⏳</span> ОГЭ: Время и его измерение <span class="emoji">⌛</span></h1>
+            <p class="subtitle">Установите соответствие между вопросами 1-7 и текстами A-F. Один вопрос останется без ответа.</p>
+        </div>
+        
+        <div class="instructions">
+            <p><span class="emoji">📝</span> Выберите для каждого вопроса букву текста в выпадающем списке. После проверки правильные ответы станут зелёными, неправильные — красными. <strong>Ключевые фразы, подтверждающие верные соответствия, будут подсвечены жёлтым.</strong></p>
+        </div>
+        
+        <!-- Основная сетка: вопросы слева, тексты справа -->
+        <div class="main-grid">
+            <!-- Левая колонка с вопросами и окошками выбора -->
+            <div class="questions-column">
+                <div class="questions-title">
+                    <span class="emoji">❓</span> Вопросы 1-7
+                </div>
+                
+                <div class="question-item-compact">
+                    <span class="question-number-compact">1</span>
+                    <span class="question-text-compact">When did people start measuring time?</span>
+                    <select class="answer-select" id="select-1">
+                        <option value="">?</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                
+                <div class="question-item-compact">
+                    <span class="question-number-compact">2</span>
+                    <span class="question-text-compact">What units have ever been used to measure time?</span>
+                    <select class="answer-select" id="select-2">
+                        <option value="">?</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                
+                <div class="question-item-compact">
+                    <span class="question-number-compact">3</span>
+                    <span class="question-text-compact">How did people know the time before clocks were invented?</span>
+                    <select class="answer-select" id="select-3">
+                        <option value="">?</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                
+                <div class="question-item-compact">
+                    <span class="question-number-compact">4</span>
+                    <span class="question-text-compact">What is the oldest clock still working today?</span>
+                    <select class="answer-select" id="select-4">
+                        <option value="">?</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                
+                <div class="question-item-compact">
+                    <span class="question-number-compact">5</span>
+                    <span class="question-text-compact">Are there still any societies that do not measure time?</span>
+                    <select class="answer-select" id="select-5">
+                        <option value="">?</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                
+                <div class="question-item-compact">
+                    <span class="question-number-compact">6</span>
+                    <span class="question-text-compact">Can time flow faster or slower?</span>
+                    <select class="answer-select" id="select-6">
+                        <option value="">?</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                
+                <div class="question-item-compact">
+                    <span class="question-number-compact">7</span>
+                    <span class="question-text-compact">Is it possible to make time go backwards?</span>
+                    <select class="answer-select" id="select-7">
+                        <option value="">?</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Правая колонка с текстами A-F (без предварительной подсветки) -->
+            <div class="texts-column">
+                <!-- Текст A -->
+                <div class="text-card-compact" id="text-A">
+                    <div class="text-header-compact">
+                        <span class="text-letter-compact">A</span>
+                        <span>Текст A</span>
+                    </div>
+                    <div class="text-content-compact" id="text-content-A">
+                        Different cultures had different ways to calculate the duration of time. They expressed it in days and years, which was based on the Earth's movement around its axis and around the Sun. Months were originally connected to the cycle of the Moon. Later, people divided the day into hours, minutes, and seconds. In medieval Europe, people expressed the length of time in candles, measuring it by how fast a candle burned.
+                    </div>
+                </div>
+                
+                <!-- Текст B -->
+                <div class="text-card-compact" id="text-B">
+                    <div class="text-header-compact">
+                        <span class="text-letter-compact">B</span>
+                        <span>Текст B</span>
+                    </div>
+                    <div class="text-content-compact" id="text-content-B">
+                        The universal units to measure time, such as hours, minutes and seconds, suggest that time always moves at a constant speed. People, however, may feel time differently: it seems to pass quickly when we are happy or busy, and very slowly when we are bored or waiting. In science, particularly in Einstein's theory of relativity, time can actually move differently depending on speed and gravitational effects – and astronauts can experience this.
+                    </div>
+                </div>
+                
+                <!-- Текст C -->
+                <div class="text-card-compact" id="text-C">
+                    <div class="text-header-compact">
+                        <span class="text-letter-compact">C</span>
+                        <span>Текст C</span>
+                    </div>
+                    <div class="text-content-compact" id="text-content-C">
+                        Nowadays, our daily life is planned, and we have schedules to follow. However, people in some Aboriginal communities still live without clocks and strict time measurement. For example, there are tribes in the Amazon and on Pacific islands who organise their lives according to natural cycles – sunrise, sunset, seasons, or weather – rather than exact hours or minutes. The Hadza people, from Tanzania, also live happily without knowing what a clock is.
+                    </div>
+                </div>
+                
+                <!-- Текст D -->
+                <div class="text-card-compact" id="text-D">
+                    <div class="text-header-compact">
+                        <span class="text-letter-compact">D</span>
+                        <span>Текст D</span>
+                    </div>
+                    <div class="text-content-compact" id="text-content-D">
+                        Time is one of the most mysterious and important parts of human life. People have always wanted to understand it. The first attempts were made thousands of years ago in ancient civilizations such as Egypt and Mesopotamia. Around 1500 BC, Egyptians used large stone sundials. The Chinese had probably started to mark hours even earlier; they had their own sundials, which showed the time using the shadow of a stick or a carved plate.
+                    </div>
+                </div>
+                
+                <!-- Текст E -->
+                <div class="text-card-compact" id="text-E">
+                    <div class="text-header-compact">
+                        <span class="text-letter-compact">E</span>
+                        <span>Текст E</span>
+                    </div>
+                    <div class="text-content-compact" id="text-content-E">
+                        A clock's hands mark the passing seconds. While science-fiction films and books often use a time-travel plot, in reality it remains impossible. Most scientists agree that time only moves forward, and so far, there is no proof that it is able to change its direction. Still, scientists who study the nature of time occasionally come up with quite extravagant theories. They suggest that the universe might be more complex than we can currently understand.
+                    </div>
+                </div>
+                
+                <!-- Текст F -->
+                <div class="text-card-compact" id="text-F">
+                    <div class="text-header-compact">
+                        <span class="text-letter-compact">F</span>
+                        <span>Текст F</span>
+                    </div>
+                    <div class="text-content-compact" id="text-content-F">
+                        In the past, people did not have mechanical or electronic devices to measure time, and they relied on nature. They looked at the position of the Sun and the stars, used the phases of the Moon, and marked the length of shadows. Sundials were common in many parts of the world, and water clocks, or sand clocks (called hourglasses) were used for shorter periods of time. Bells in towns and monasteries also reminded people when to pray, work, or rest.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="check-btn" id="check-btn"><span class="emoji">✅</span> Проверить ответы</button>
+            <button class="reset-btn" id="reset-btn"><span class="emoji">🔄</span> Сбросить все</button>
+        </div>
+        
+        <div class="results" id="results"></div>
+        <div class="unanswered-info" id="unanswered-info"></div>
+    </div>
+
+    <script>
+        // Правильные соответствия вопросов и текстов
+        const correctMatches = {
+            1: 'D', // When did people start measuring time? – текст D (первые попытки в древних цивилизациях)
+            2: 'A', // What units have ever been used to measure time? – текст A (дни, годы, месяцы, часы, минуты, секунды, свечи)
+            3: 'F', // How did people know the time before clocks? – текст F (полагались на природу, солнце, звёзды, луну, тени)
+            4: '?', // What is the oldest clock still working today? – НЕТ ОТВЕТА (нигде не сказано о работающих древних часах)
+            5: 'C', // Are there still any societies that do not measure time? – текст C (племена в Амазонии, на тихоокеанских островах, хадза)
+            6: 'B', // Can time flow faster or slower? – текст B (теория относительности, время движется по-разному)
+            7: 'E'  // Is it possible to make time go backwards? – текст E (невозможно, только вперёд)
+        };
+
+        // Оригинальные тексты без подсветки (для сброса)
+        const rawTexts = {
+            'A': document.getElementById('text-content-A').innerHTML,
+            'B': document.getElementById('text-content-B').innerHTML,
+            'C': document.getElementById('text-content-C').innerHTML,
+            'D': document.getElementById('text-content-D').innerHTML,
+            'E': document.getElementById('text-content-E').innerHTML,
+            'F': document.getElementById('text-content-F').innerHTML
+        };
+
+        // Ключевые фразы для подсветки (по текстам)
+        const keyPhrases = {
+            'A': ['days and years', 'months', 'hours, minutes, and seconds', 'candles', 'how fast a candle burned'],
+            'B': ['time can actually move differently', 'Einstein\'s theory of relativity', 'depending on speed and gravitational effects'],
+            'C': ['people in some Aboriginal communities still live without clocks', 'tribes in the Amazon and on Pacific islands', 'Hadza people', 'without knowing what a clock is'],
+            'D': ['The first attempts were made thousands of years ago', 'Egypt and Mesopotamia', 'Around 1500 BC, Egyptians used large stone sundials', 'Chinese had probably started to mark hours even earlier'],
+            'E': ['in reality it remains impossible', 'time only moves forward', 'no proof that it is able to change its direction'],
+            'F': ['they relied on nature', 'position of the Sun and the stars', 'phases of the Moon', 'length of shadows', 'Sundials', 'water clocks, or sand clocks', 'Bells in towns and monasteries']
+        };
+
+        // Функция для добавления подсветки в текст
+        function highlightKeyPhrases(textLetter, htmlContent) {
+            let modifiedHtml = htmlContent;
+            if (keyPhrases[textLetter]) {
+                keyPhrases[textLetter].forEach(phrase => {
+                    // Экранируем спецсимволы (на случай скобок и т.п.)
+                    const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    // Ищем фразу между символами > и < (не внутри тегов)
+                    const regex = new RegExp(`(?<=>|^)([^<]*?)(${escapedPhrase})([^<]*?)(?=<|$)`, 'gi');
+                    modifiedHtml = modifiedHtml.replace(regex, (match, before, keyword, after) => {
+                        return before + '<span class="highlight">' + keyword + '</span>' + after;
+                    });
+                });
+            }
+            return modifiedHtml;
+        }
+
+        // Функция сброса
+        function resetAll() {
+            for (let i = 1; i <= 7; i++) {
+                const select = document.getElementById(`select-${i}`);
+                select.value = '';
+                select.classList.remove('correct', 'incorrect');
+            }
+            
+            // Восстанавливаем原始ный текст без подсветки
+            for (let letter of ['A', 'B', 'C', 'D', 'E', 'F']) {
+                document.getElementById(`text-content-${letter}`).innerHTML = rawTexts[letter];
+            }
+            
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('unanswered-info').style.display = 'none';
+        }
+        
+        // Функция проверки
+        function checkAnswers() {
+            // Сначала возвращаем raw-тексты
+            for (let letter of ['A', 'B', 'C', 'D', 'E', 'F']) {
+                document.getElementById(`text-content-${letter}`).innerHTML = rawTexts[letter];
+            }
+
+            let correctCount = 0;
+            
+            // Проверяем селекты и расцвечиваем рамки
+            for (let i = 1; i <= 7; i++) {
+                const select = document.getElementById(`select-${i}`);
+                const selectedValue = select.value;
+                
+                select.classList.remove('correct', 'incorrect');
+                
+                if (!selectedValue) continue; // не выбрано – пропускаем (неправильным не считаем, но и зелёным не делаем)
+                
+                // Для вопроса 4 правильного ответа нет (null)
+                if (i === 4) {
+                    if (selectedValue) select.classList.add('incorrect'); // любой выбор для 4 — ошибка
+                } 
+                else if (selectedValue === correctMatches[i]) {
+                    select.classList.add('correct');
+                    correctCount++;
+                } else {
+                    select.classList.add('incorrect');
+                }
+            }
+
+            // Подсветка ключевых фраз только для текстов, которые верно соотнесены
+            const correctlyMatchedTexts = new Set();
+            for (let i = 1; i <= 7; i++) {
+                if (i === 4) continue; // пропускаем вопрос без ответа
+                const select = document.getElementById(`select-${i}`);
+                if (select.value === correctMatches[i]) {
+                    correctlyMatchedTexts.add(select.value);
+                }
+            }
+
+            // Добавляем подсветку в нужные тексты
+            for (let letter of correctlyMatchedTexts) {
+                const elem = document.getElementById(`text-content-${letter}`);
+                elem.innerHTML = highlightKeyPhrases(letter, rawTexts[letter]);
+            }
+            
+            // Показываем результаты
+            const results = document.getElementById('results');
+            results.style.display = 'block';
+            
+            // Максимум правильных – 6 (вопрос 4 без ответа)
+            if (correctCount === 6) {
+                results.textContent = `🎉 Поздравляем! Все 6 вопросов с ответами правильные!`;
+                results.className = 'results success';
+            } else {
+                results.textContent = `📊 Результат: ${correctCount} из 6 правильных ответов.`;
+                results.className = 'results partial';
+            }
+            
+            const unansweredInfo = document.getElementById('unanswered-info');
+            unansweredInfo.style.display = 'block';
+            unansweredInfo.innerHTML = `❓ Вопрос 4 остался без ответа (информация о древнейших работающих часах отсутствует в текстах).`;
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('check-btn').addEventListener('click', checkAnswers);
+            document.getElementById('reset-btn').addEventListener('click', resetAll);
+            
+            for (let i = 1; i <= 7; i++) {
+                document.getElementById(`select-${i}`).addEventListener('change', function() {
+                    this.classList.remove('correct', 'incorrect');
+                    document.getElementById('results').style.display = 'none';
+                    document.getElementById('unanswered-info').style.display = 'none';
+                    
+                    // При изменении выбора убираем подсветку (возвращаем raw-текст)
+                    for (let letter of ['A', 'B', 'C', 'D', 'E', 'F']) {
+                        document.getElementById(`text-content-${letter}`).innerHTML = rawTexts[letter];
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

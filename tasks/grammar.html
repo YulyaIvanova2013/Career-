@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ОГЭ Английский: Грамматика | Текстовый Тренажер</title>
+<style>
+:root {
+--primary: #6366f1;
+--primary-dark: #4f46e5;
+--success: #10b981;
+--error: #ef4444;
+--text-bg: #ffffff;
+--input-bg: #f8fafc;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+background-size: 400% 400%;
+animation: gradientBG 15s ease infinite;
+min-height: 100vh;
+padding: 20px;
+color: #333;
+line-height: 1.6;
+}
+@keyframes gradientBG {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+}
+.container { max-width: 950px; margin: 0 auto; }
+.header {
+background: rgba(255, 255, 255, 0.95);
+border-radius: 20px;
+padding: 30px;
+text-align: center;
+box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+margin-bottom: 30px;
+backdrop-filter: blur(10px);
+}
+.header h1 {
+background: -webkit-linear-gradient(#ee7752, #e73c7e);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+font-size: 2.2em;
+margin-bottom: 10px;
+font-weight: 800;
+}
+.header-info { color: #555; font-size: 1.1em; }
+.badge {
+display: inline-block;
+background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+color: #444;
+padding: 6px 16px;
+border-radius: 20px;
+font-weight: 700;
+margin-top: 10px;
+font-size: 0.9em;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.variants-grid {
+background: rgba(255, 255, 255, 0.95);
+border-radius: 20px;
+padding: 30px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+margin-bottom: 20px;
+backdrop-filter: blur(10px);
+}
+.variants-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 20px;
+padding: 20px;
+margin-top: 20px;
+}
+.variant-btn {
+padding: 25px 50px;
+border: 2px solid #e2e8f0;
+background: white;
+color: #64748b;
+border-radius: 15px;
+cursor: pointer;
+font-weight: 700;
+font-size: 1.3em;
+transition: all 0.2s;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+width: 100%;
+max-width: 500px;
+text-align: center;
+}
+.variant-btn:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.15); }
+.variant-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4); }
+.variant-btn.completed { background: #d1fae5; border-color: #10b981; color: #065f46; }
+.task-section {
+background: rgba(255, 255, 255, 0.95);
+border-radius: 20px;
+padding: 30px 40px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+display: none;
+animation: slideUp 0.4s ease;
+backdrop-filter: blur(10px);
+}
+.task-section.active { display: block; }
+@keyframes slideUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.task-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+border-bottom: 2px solid #f1f5f9;
+padding-bottom: 15px;
+flex-wrap: wrap;
+gap: 10px;
+}
+.task-title { font-size: 1.5em; color: var(--primary-dark); font-weight: 700; }
+.instruction {
+background: #eff6ff;
+border-left: 5px solid var(--primary);
+padding: 15px;
+border-radius: 8px;
+margin-bottom: 25px;
+color: #1e40af;
+font-size: 0.95em;
+}
+.text-passage {
+font-size: 1.15em;
+line-height: 2;
+color: #2d3748;
+margin-bottom: 25px;
+text-align: justify;
+background: var(--text-bg);
+padding: 30px;
+border-radius: 15px;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+border: 1px solid #e2e8f0;
+position: relative;
+}
+.text-passage::before {
+content: '';
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 6px;
+background: linear-gradient(90deg, #ee7752, #e73c7e);
+border-radius: 15px 15px 0 0;
+}
+.blank-input {
+display: inline-block;
+min-width: 140px;
+border: none;
+border-bottom: 3px solid #cbd5e1;
+background: var(--input-bg);
+font-size: 0.95em;
+font-family: inherit;
+color: var(--primary-dark);
+font-weight: 700;
+text-align: center;
+padding: 4px 8px;
+margin: 0 3px;
+transition: all 0.3s;
+outline: none;
+border-radius: 6px 6px 0 0;
+vertical-align: baseline;
+}
+.blank-input:focus {
+border-bottom-color: var(--primary);
+background: #e0e7ff;
+transform: scale(1.02);
+}
+.blank-input.correct { border-bottom-color: var(--success); color: var(--success); background: #d1fae5; }
+.blank-input.incorrect { border-bottom-color: var(--error); color: var(--error); background: #fee2e2; text-decoration: line-through; }
+.root-word-badge {
+display: inline-block;
+background: #64748b;
+color: white;
+font-size: 0.65em;
+padding: 2px 8px;
+border-radius: 10px;
+margin-left: 4px;
+vertical-align: super;
+font-weight: normal;
+text-transform: uppercase;
+box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.controls {
+display: flex;
+gap: 15px;
+justify-content: center;
+margin-top: 25px;
+flex-wrap: wrap;
+}
+.btn {
+padding: 12px 24px;
+border: none;
+border-radius: 12px;
+font-size: 1em;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.2s;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+.btn:active { transform: translateY(0); }
+.btn-primary { background: var(--primary); color: white; }
+.btn-secondary { background: white; color: #64748b; border: 2px solid #e2e8f0; }
+.btn-success { background: var(--success); color: white; }
+.btn-warning { background: #f59e0b; color: white; }
+.results-overlay {
+position: fixed;
+top: 0; left: 0; width: 100%; height: 100%;
+background: rgba(0,0,0,0.6);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+backdrop-filter: blur(5px);
+}
+.results-card {
+background: white;
+padding: 40px;
+border-radius: 25px;
+text-align: center;
+max-width: 500px;
+width: 90%;
+animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+@keyframes popIn {
+from { transform: scale(0.8); opacity: 0; }
+to { transform: scale(1); opacity: 1; }
+}
+.score-circle {
+width: 150px;
+height: 150px;
+border-radius: 50%;
+background: conic-gradient(var(--success) 0%, #e2e8f0 0%);
+margin: 0 auto 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+position: relative;
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.score-inner {
+width: 130px;
+height: 130px;
+background: white;
+border-radius: 50%;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+.score-number { font-size: 2.5em; font-weight: 800; color: var(--primary-dark); }
+.score-label { color: #94a3b8; font-size: 0.9em; }
+@media (max-width: 700px) {
+.text-passage { font-size: 1em; line-height: 1.9; padding: 20px; }
+.blank-input { min-width: 110px; font-size: 0.9em; }
+.header h1 { font-size: 1.6em; }
+.variant-btn { padding: 20px 30px; font-size: 1.1em; }
+.task-section { padding: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🎓 ОГЭ Английский: Грамматика</h1>
+<div class="header-info">Тренажер по текстам ФИПИ • Задания 20-28</div>
+<span class="badge">📚 Уровень A2-B1 • 5 текстов</span>
+</div>
+
+<!-- Menu -->
+<div class="variants-grid" id="variantsGrid">
+<h2 style="color:var(--primary-dark); margin-bottom:10px; text-align:center;">Выберите текст для тренировки:</h2>
+<div class="variants-container" id="variantsContainer"></div>
+</div>
+
+<!-- Task Area -->
+<div class="task-section" id="taskSection">
+<div class="task-header">
+<div class="task-title" id="variantTitle">Текст 11</div>
+<button class="btn btn-secondary" onclick="backToMenu()" style="padding: 8px 16px; font-size: 0.9em;">✕ Закрыть</button>
+</div>
+<div class="instruction">
+<strong>📖 Задание:</strong> Прочитайте текст. Преобразуйте слова, напечатанные заглавными буквами в конце строк, так, чтобы они грамматически соответствовали содержанию текста. Заполните пропуски полученными словами. <strong>Важно:</strong> используйте полные формы (не сокращения): <em>did not</em>, <em>could not</em> и т.д.
+</div>
+<div id="textContainer" class="text-passage"></div>
+<div class="controls">
+<button class="btn btn-primary" onclick="checkAllAnswers()">✅ Проверить ответы</button>
+<button class="btn btn-warning" onclick="showAllAnswers()">💡 Показать ответы</button>
+<button class="btn btn-secondary" onclick="resetVariant()">🔄 Сбросить</button>
+</div>
+</div>
+</div>
+
+<!-- Results Modal -->
+<div class="results-overlay" id="resultsModal">
+<div class="results-card">
+<h2 style="color:var(--primary-dark); margin-bottom:20px;">Результат</h2>
+<div class="score-circle" id="scoreCircle">
+<div class="score-inner">
+<div class="score-number" id="finalScore">0%</div>
+<div class="score-label">Верно</div>
+</div>
+</div>
+<p id="motivationalText" style="font-size:1.2em; color:#475569; margin-bottom:25px;"></p>
+<div class="controls" style="margin-top:0;">
+<button class="btn btn-primary" onclick="closeResults()">Продолжить</button>
+<button class="btn btn-secondary" onclick="backToMenu(); closeResults()">К меню</button>
+</div>
+</div>
+</div>
+
+<script>
+// Database with FULL TEXTS from FIPB OGE 2021 Grammar tasks (20-28)
+// ALL answers use FULL FORMS (no contractions): DID NOT, COULD NOT, etc.
+const database = {
+  11: {
+    text: `I was sitting in an arm-chair and watching my sister Alison. She was getting ready for a party. Alison was 15 years {{0}} than me <span class="root-word-badge">OLD</span> and she always treated me like a child. Alison took her jewellery box from the table. The box {{1}} of wood and had colourful stones <span class="root-word-badge">MAKE</span> on the top. "You know you must never touch it, right?" Alison said. "If the box was mine, I {{2}} you to touch it whenever you wanted," <span class="root-word-badge">ALLOW</span> I answered. Alison said nothing to that. When she put on her jewelry, she looked like a princess. She moved gracefully as if her {{3}} didn't touch the ground. <span class="root-word-badge">FOOT</span> Alison kissed me goodnight and left. I tried to resist my curiosity but I {{4}}. <span class="root-word-badge">NOT/CAN</span> I opened the box. There {{5}} lots of rings, ear-rings, bracelets and necklaces inside. <span class="root-word-badge">BE</span> I got them all out. The {{6}} piece of jewelry I tried on was a silver necklace. <span class="root-word-badge">ONE</span> After that I lost track of time. Suddenly I {{7}} Alison. <span class="root-word-badge">SEE</span> She was standing at the doorway and looking at me angrily. I {{8}} what to say. <span class="root-word-badge">NOT/KNOW</span> Many years have passed since that night. Now I am a designer - I create clothes and accessories. My sister likes my work very much.`,
+    blanks: [
+      {root: "OLD", answer: "OLDER"},
+      {root: "MAKE", answer: "WAS MADE"},
+      {root: "ALLOW", answer: "WOULD ALLOW"},
+      {root: "FOOT", answer: "FEET"},
+      {root: "NOT/CAN", answer: "COULD NOT"},
+      {root: "BE", answer: "WAS/WERE"},
+      {root: "ONE", answer: "FIRST"},
+      {root: "SEE", answer: "SAW"},
+      {root: "NOT/KNOW", answer: "DID NOT KNOW"}
+    ]
+  },
+  12: {
+    text: `Emma lived in a big city and worked for a large company. Her days were usually very busy – she {{0}} hardly find half an hour for lunch. <span class="root-word-badge">CAN</span> However, at weekends she {{1}} bored and lonely. <span class="root-word-badge">FEEL</span> Emma had moved to the city because of her job. Only two months before she had thought she was the {{2}} girl in the world. <span class="root-word-badge">LUCKY</span> She had got a job most of her friends could only dream about. It was her {{3}} full-time job. <span class="root-word-badge">ONE</span> The company {{4}} 'Imagination'. <span class="root-word-badge">CALL</span> They focused on Internet technologies. Emma {{5}} much about the Internet but her boss said that it didn't matter. <span class="root-word-badge">NOT/KNOW</span> He also said that she {{6}} creative and had imagination and that was why she had a good chance of succeeding in the job. <span class="root-word-badge">BE</span> When Emma told her friend, Lucy Pitt, about the new job, Lucy said: "I'm very happy that you {{7}} a good job. <span class="root-word-badge">FIND</span> But I also feel very sad about it because you'll go to the city and will forget about your friends." "I wish we could always be together but it's impossible," Emma said. "I promise that I {{8}} to visit you as soon as I can." <span class="root-word-badge">COME</span>`,
+    blanks: [
+      {root: "CAN", answer: "COULD"},
+      {root: "FEEL", answer: "FELT"},
+      {root: "LUCKY", answer: "LUCKIEST"},
+      {root: "ONE", answer: "FIRST"},
+      {root: "CALL", answer: "WAS CALLED"},
+      {root: "NOT/KNOW", answer: "DID NOT KNOW"},
+      {root: "BE", answer: "WAS"},
+      {root: "FIND", answer: "HAVE FOUND"},
+      {root: "COME", answer: "WILL COME"}
+    ]
+  },
+  13: {
+    text: `Jane liked going to the park with her mum. One day when they were there, she said, "There is so much rubbish on the ground." They looked around. There were old {{0}}, waste paper and cans on the ground. <span class="root-word-badge">BOX</span> Several benches {{1}}. <span class="root-word-badge">BREAK</span> "You are right," her mum said. "I wish people {{2}} about the environment more." <span class="root-word-badge">CARE</span> "I do care about it but I {{3}} what I can do to help the park," said Jane. <span class="root-word-badge">NOT/KNOW</span> Jane and her mum went home. In the evening she painted a picture of the park. At the top of the picture she {{4}} "PLEASE KEEP ME CLEAN". <span class="root-word-badge">WRITE</span> The next day Jane and her mum went to the park {{5}} than usual. <span class="root-word-badge">EARLY</span> Jane taped her picture onto a big rubbish bin and started picking up rubbish. Some children ran over to see what was going on. They decided to help Jane. Soon all the rubbish was in the bags. "Good job," Jane said, "We {{6}} half of the park. <span class="root-word-badge">CLEAN</span> If we come and complete the other part tomorrow, the whole park {{7}} clean and tidy. <span class="root-word-badge">BE</span> I hope people won't throw {{8}} rubbish here any more." <span class="root-word-badge">THEY</span>`,
+    blanks: [
+      {root: "BOX", answer: "BOXES"},
+      {root: "BREAK", answer: "WERE BROKEN"},
+      {root: "CARE", answer: "CARED"},
+      {root: "NOT/KNOW", answer: "DO NOT KNOW"},
+      {root: "WRITE", answer: "WROTE"},
+      {root: "EARLY", answer: "EARLIER"},
+      {root: "CLEAN", answer: "HAVE CLEANED"},
+      {root: "BE", answer: "WILL BE"},
+      {root: "THEY", answer: "THEIR"}
+    ]
+  },
+  14: {
+    text: `Once there were four children whose names were Peter, Susan, Edmund and Lucy. This story happened to {{0}} when they had to leave their home city, London, during the war. <span class="root-word-badge">THEY</span> They {{1}} to the house of an old Professor who lived in the country, ten miles from the nearest railway station. <span class="root-word-badge">SEND</span> He {{2}} a wife and he lived in a very large house with a housekeeper. <span class="root-word-badge">NOT/HAVE</span> He himself was a very old man with white hair which grew over most of his face as well as on his head. The children liked him almost at once. Only Lucy, who was the {{3}} of them, felt a little afraid of him. <span class="root-word-badge">YOUNG</span> On their {{4}} evening, after dinner, they said good night to the Professor and went upstairs. <span class="root-word-badge">ONE</span> It was the largest house they had ever seen, so Peter suggested exploring it in the morning. When the next morning came, there was a steady rain falling. "I wish the weather {{5}} more cheerful!" said Edmund. <span class="root-word-badge">BE</span> "Stop complaining, Ed," said Susan. "I think the weather {{6}} soon." <span class="root-word-badge">IMPROVE</span> "We were going to explore the house," Peter reminded them. He {{7}} a sandwich at the moment and was absolutely happy with the whole situation. <span class="root-word-badge">EAT</span> Everyone nodded and at that point their amazing adventures {{8}}. <span class="root-word-badge">BEGIN</span>`,
+    blanks: [
+      {root: "THEY", answer: "THEM"},
+      {root: "SEND", answer: "WERE SENT"},
+      {root: "NOT/HAVE", answer: "DID NOT HAVE"},
+      {root: "YOUNG", answer: "YOUNGEST"},
+      {root: "ONE", answer: "FIRST"},
+      {root: "BE", answer: "WERE"},
+      {root: "IMPROVE", answer: "WILL IMPROVE"},
+      {root: "EAT", answer: "WAS EATING"},
+      {root: "BEGIN", answer: "BEGAN"}
+    ]
+  },
+  15: {
+    text: `Dana Miller was a bus driver in the city of Philadelphia. Her working hours {{0}} from 10.00 pm till 6.00 am. <span class="root-word-badge">BE</span> It was a hard job and very few {{1}} worked as bus drivers in those days but Dana loved her job very much. <span class="root-word-badge">WOMAN</span> One of her regular passengers was a guitar player. Every Friday night he got on the bus carrying his guitar. The guitar {{2}} of wood, not plastic, and Dana liked the way it sounded. <span class="root-word-badge">MAKE</span> "You should come to see our show," the guitarist kept saying to Dana. "I {{3}} it one day," Dana promised each time, but she never said when exactly she {{4}}. <span class="root-word-badge">SEE</span> <span class="root-word-badge">GO</span> Another passenger who often used Dana's bus was a Biscuit Lady. She worked at the biscuit factory and often {{5}} Dana a small bag of biscuits. <span class="root-word-badge">GIVE</span> Dana {{6}} sweets and pastries very much, but she could never resist those biscuits – they were so fresh and tasty. <span class="root-word-badge">NOT/LIKE</span> "How was {{7}} night?" Dana's husband liked to ask her when she came home. <span class="root-word-badge">YOU</span> "Good music, good food and a great view of the city," she cheerfully answered. "I wish I {{8}} my work as much as you enjoy yours," her husband said, "but I'm going to have just another boring day at the office." <span class="root-word-badge">ENJOY</span>`,
+    blanks: [
+      {root: "BE", answer: "WERE"},
+      {root: "WOMAN", answer: "WOMEN"},
+      {root: "MAKE", answer: "WAS MADE"},
+      {root: "SEE", answer: "WILL SEE"},
+      {root: "GO", answer: "WOULD GO"},
+      {root: "GIVE", answer: "GAVE"},
+      {root: "NOT/LIKE", answer: "DID NOT LIKE"},
+      {root: "YOU", answer: "YOUR"},
+      {root: "ENJOY", answer: "ENJOYED"}
+    ]
+  }
+};
+
+let currentVariant = null;
+let variantScores = {};
+
+// Initialize Menu
+function initVariants() {
+  const container = document.getElementById('variantsContainer');
+  container.innerHTML = '';
+  [11,12,13,14,15].forEach(i => {
+    const btn = document.createElement('button');
+    btn.className = 'variant-btn';
+    btn.textContent = `Текст ${i}`;
+    btn.onclick = () => loadVariant(i);
+    if (variantScores[i]) btn.classList.add('completed');
+    container.appendChild(btn);
+  });
+}
+
+// Load Variant Text
+function loadVariant(n) {
+  currentVariant = n;
+  document.getElementById('variantsGrid').style.display = 'none';
+  document.getElementById('taskSection').classList.add('active');
+  document.getElementById('variantTitle').textContent = `Текст ${n}`;
+  
+  const data = database[n];
+  const container = document.getElementById('textContainer');
+  
+  // Replace {{index}} with input fields
+  let html = data.text;
+  data.blanks.forEach((blank, idx) => {
+    const input = `<input type="text" class="blank-input" data-index="${idx}" data-answer="${blank.answer}" autocomplete="off" placeholder="...">`;
+    html = html.replace(`{{${idx}}}`, input);
+  });
+  container.innerHTML = html;
+  
+  // Add Enter key listener
+  document.querySelectorAll('.blank-input').forEach(input => {
+    input.addEventListener('keypress', e => { if(e.key==='Enter') checkAllAnswers(); });
+  });
+}
+
+// Check All Answers - accepts both full and contracted forms for flexibility
+function checkAllAnswers() {
+  const inputs = document.querySelectorAll('.blank-input');
+  let correct = 0;
+  inputs.forEach(inp => {
+    const user = inp.value.trim().toUpperCase();
+    const ans = inp.dataset.answer;
+    inp.classList.remove('correct','incorrect');
+    
+    // Accept both full and contracted forms for negative answers
+    const equivalents = {
+      "COULD NOT": ["COULD NOT", "COULDN'T"],
+      "DID NOT KNOW": ["DID NOT KNOW", "DIDN'T KNOW"],
+      "DO NOT KNOW": ["DO NOT KNOW", "DON'T KNOW"],
+      "DID NOT HAVE": ["DID NOT HAVE", "DIDN'T HAVE"],
+      "DID NOT LIKE": ["DID NOT LIKE", "DIDN'T LIKE"]
+    };
+    
+    const validAnswers = equivalents[ans] || [ans];
+    
+    if(validAnswers.includes(user)) { 
+      inp.classList.add('correct'); 
+      correct++; 
+    }
+    else if(user) inp.classList.add('incorrect');
+  });
+  showResultsModal(correct, inputs.length);
+}
+
+// Show Answers (with full forms as required)
+function showAllAnswers() {
+  document.querySelectorAll('.blank-input').forEach(inp => {
+    inp.value = inp.dataset.answer;
+    inp.classList.add('correct');
+    inp.disabled = true;
+  });
+}
+
+// Reset
+function resetVariant() {
+  document.querySelectorAll('.blank-input').forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('correct','incorrect');
+    inp.disabled = false;
+  });
+}
+
+// Results
+function showResultsModal(score, total) {
+  const pct = Math.round(score/total*100);
+  document.getElementById('scoreCircle').style.background = `conic-gradient(var(--success) ${pct}%, #e2e8f0 ${pct}%)`;
+  document.getElementById('finalScore').textContent = `${pct}%`;
+  const texts = [
+    [100,"🏆 Великолепно! Идеальный результат!"],
+    [80,"🌟 Отлично! Вы хорошо готовы к ОГЭ."],
+    [50,"👍 Хорошо, но есть над чем поработать."],
+    [0,"📚 Нужно повторить грамматические правила."]
+  ];
+  const msg = texts.find(t => pct >= t[0])[1];
+  document.getElementById('motivationalText').textContent = msg;
+  document.getElementById('resultsModal').style.display = 'flex';
+  if(!variantScores[currentVariant] || pct > variantScores[currentVariant]) {
+    variantScores[currentVariant] = pct;
+    const btns = document.querySelectorAll('.variant-btn');
+    btns[[11,12,13,14,15].indexOf(currentVariant)]?.classList.add('completed');
+  }
+}
+function closeResults() { document.getElementById('resultsModal').style.display = 'none'; }
+function backToMenu() {
+  document.getElementById('taskSection').classList.remove('active');
+  document.getElementById('variantsGrid').style.display = 'block';
+  currentVariant = null;
+}
+
+initVariants();
+</script>
+</body>
+</html>

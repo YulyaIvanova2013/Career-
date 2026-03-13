@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Grammar: Beginner</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #89f7fe, #66a6ff);
+            font-family: 'Nunito', sans-serif;
+            touch-action: none;
+            color: #333;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hud {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Fredoka One', cursive;
+            font-size: 32px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #333, 0 0 10px rgba(255,255,255,0.8);
+            pointer-events: none;
+        }
+
+        .modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 5px solid #FFD700;
+            pointer-events: auto;
+            display: none;
+            max-width: 90%;
+            width: 450px;
+            z-index: 100;
+            color: #333;
+        }
+
+        .modal h1 { color: #ff6b6b; font-family: 'Fredoka One', cursive; margin-top: 0; font-size: 32px;}
+        .modal p { font-size: 20px; color: #555; line-height: 1.5; }
+        
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Fredoka One', cursive;
+            transition: transform 0.1s;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        .btn:hover { transform: scale(1.05); }
+        .btn:active { transform: scale(0.95); }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .quiz-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .quiz-btn:hover { background: #1976D2; }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="ui-layer">
+        <div class="hud">
+            <div id="scoreDisplay">Stars: 0</div>
+            <div id="livesDisplay">Shield: 100%</div>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startModal" class="modal" style="display: block;">
+        <h1>🌌 Space Grammar</h1>
+        <p>Pilot! Collect <strong>50 Stars</strong>!</p>
+        <p>Use <strong>Mouse</strong> or <strong>Arrow Keys</strong> to move.</p>
+        <p>⚠️ Answer the question every 5 stars!</p>
+        <button class="btn" onclick="startGame()">START GAME</button>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div id="quizModal" class="modal">
+        <h1>📡 Time to Think!</h1>
+        <p id="quizQuestion" style="font-size: 24px; color: #333; font-weight: bold; margin: 20px 0;">Question...</p>
+        <div class="quiz-options" id="quizOptions"></div>
+        <p id="quizFeedback" style="height: 25px; font-weight: bold; margin-top:15px; font-size: 18px;"></p>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal">
+        <h1 style="color: #ff4757;">💥 Oh no!</h1>
+        <p>Shields are down.</p>
+        <p>Score: <span id="finalScore" style="color: #FFD700; font-weight: bold; font-size: 28px;">0</span></p>
+        <button class="btn" onclick="resetGame()">TRY AGAIN</button>
+    </div>
+
+    <!-- Victory Modal -->
+    <div id="victoryModal" class="modal">
+        <h1>🏆 YOU WIN!</h1>
+        <p>Great job, Pilot!</p>
+        <p>Score: <span id="winScore" style="color: #FFD700; font-weight: bold; font-size: 28px;">50</span></p>
+        <button class="btn" onclick="resetGame()">PLAY AGAIN</button>
+    </div>
+
+<script>
+    /** 
+     * QUIZ DATA (Beginner Level - A1)
+     */
+    const quizData = [
+        { q: "Look! It ___ (rain).", options: ["rains", "is raining"], correct: 1 },
+        { q: "I ___ (like) ice cream.", options: ["like", "am liking"], correct: 0 },
+        { q: "She ___ (read) a book now.", options: ["reads", "is reading"], correct: 1 },
+        { q: "They ___ (play) football every day.", options: ["play", "are playing"], correct: 0 },
+        { q: "Listen! The baby ___ (cry).", options: ["cries", "is crying"], correct: 1 },
+        { q: "He ___ (go) to school on Mondays.", options: ["goes", "is going"], correct: 0 },
+        { q: "We ___ (watch) TV now.", options: ["watch", "are watching"], correct: 1 },
+        { q: "The sun ___ (shine) every day.", options: ["shines", "is shining"], correct: 0 },
+        { q: "Be quiet! Dad ___ (sleep).", options: ["sleeps", "is sleeping"], correct: 1 },
+        { q: "Cats ___ (eat) fish.", options: ["eat", "are eating"], correct: 0 },
+        { q: "Look! The dog ___ (run).", options: ["runs", "is running"], correct: 1 },
+        { q: "I ___ (drink) water every morning.", options: ["drink", "am drinking"], correct: 0 },
+        { q: "She ___ (not / like) apples.", options: ["doesn't like", "isn't liking"], correct: 0 },
+        { q: "They ___ (not / sleep) now.", options: ["don't sleep", "aren't sleeping"], correct: 1 },
+        { q: "___ (you / speak) English?", options: ["Do you speak", "Are you speaking"], correct: 0 },
+        { q: "What ___ (you / do) now?", options: ["do you do", "are you doing"], correct: 1 },
+        { q: "My mom ___ (cook) dinner now.", options: ["cooks", "is cooking"], correct: 1 },
+        { q: "Birds ___ (fly) in the sky.", options: ["fly", "are flying"], correct: 0 },
+        { q: "Look! He ___ (swim).", options: ["swims", "is swimming"], correct: 1 },
+        { q: "I ___ (love) my family.", options: ["love", "am loving"], correct: 0 }
+    ];
+
+    /**
+     * GAME ENGINE
+     */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let gameRunning = false;
+    let gamePaused = false;
+    let score = 0;
+    let lives = 3;
+    let lastQuizScore = 0;
+    
+    let playerEmoji = "🚀"; 
+    let itemEmojis = ["⭐", "🪐", "🌙", "☄️", "🛸"]; 
+
+    let player = { x: 0, y: 0, width: 80, height: 80, speed: 10 };
+    let items = [];
+    let particles = [];
+    let stars = []; 
+
+    let keys = { ArrowLeft: false, ArrowRight: false };
+    let mouseX = null;
+
+    function initStars() {
+        stars = [];
+        for(let i=0; i<100; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2 + 1,
+                alpha: Math.random(),
+                speed: Math.random() * 0.05 + 0.01
+            });
+        }
+    }
+
+    function drawBackground() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#FFF";
+        stars.forEach(star => {
+            star.alpha += star.speed;
+            if(star.alpha > 1 || star.alpha < 0.2) star.speed = -star.speed;
+            ctx.globalAlpha = Math.abs(star.alpha);
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.globalAlpha = 1.0;
+    }
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        player.y = canvas.height - player.height - 20;
+        if(player.x > canvas.width) player.x = canvas.width / 2;
+        initStars();
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('keydown', (e) => { if(keys.hasOwnProperty(e.code)) keys[e.code] = true; });
+    window.addEventListener('keyup', (e) => { if(keys.hasOwnProperty(e.code)) keys[e.code] = false; });
+    window.addEventListener('mousemove', (e) => { if(gameRunning && !gamePaused) mouseX = e.clientX; });
+    window.addEventListener('touchmove', (e) => { if(gameRunning && !gamePaused) mouseX = e.touches[0].clientX; }, {passive: true});
+
+    function startGame() {
+        document.getElementById('startModal').style.display = 'none';
+        resetVariables();
+        gameRunning = true;
+        gamePaused = false;
+        loop();
+    }
+
+    function resetVariables() {
+        score = 0;
+        lives = 3;
+        items = [];
+        particles = [];
+        lastQuizScore = 0;
+        updateUI();
+        player.x = canvas.width / 2 - player.width / 2;
+    }
+
+    function resetGame() {
+        document.getElementById('gameOverModal').style.display = 'none';
+        document.getElementById('victoryModal').style.display = 'none';
+        document.getElementById('startModal').style.display = 'block';
+    }
+
+    function spawnItem() {
+        const size = 60;
+        const x = Math.random() * (canvas.width - size);
+        
+        // ИЗМЕНЕНИЯ ЗДЕСЬ: Скорость значительно снижена
+        // Базовая скорость: от 2 до 4 (было 3-6)
+        // Прирост скорости от очков уменьшен (score * 0.05 вместо 0.1)
+        const speed = 2 + Math.random() * 2 + (score * 0.05); 
+        
+        const randomEmoji = itemEmojis[Math.floor(Math.random() * itemEmojis.length)];
+
+        items.push({
+            x: x,
+            y: -size,
+            width: size,
+            height: size,
+            speed: speed,
+            emoji: randomEmoji
+        });
+    }
+
+    function update() {
+        if (gamePaused) return;
+
+        if (mouseX !== null) {
+            player.x = mouseX - player.width / 2;
+        } else {
+            if (keys.ArrowLeft) player.x -= player.speed;
+            if (keys.ArrowRight) player.x += player.speed;
+        }
+
+        if (player.x < 0) player.x = 0;
+        if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+        // ИЗМЕНЕНИЯ ЗДЕСЬ: Частота появления предметов снижена
+        // Было 0.02, стало 0.015 (предметы падают реже)
+        if (Math.random() < 0.015 + (score * 0.0005)) {
+            spawnItem();
+        }
+
+        for (let i = items.length - 1; i >= 0; i--) {
+            let f = items[i];
+            f.y += f.speed;
+
+            if (
+                f.x < player.x + player.width &&
+                f.x + f.width > player.x &&
+                f.y < player.y + player.height &&
+                f.y + f.height > player.y
+            ) {
+                score++;
+                items.splice(i, 1);
+                checkWinCondition();
+                checkQuizTrigger();
+                updateUI();
+                continue;
+            }
+
+            if (f.y > canvas.height) {
+                lives--;
+                items.splice(i, 1);
+                updateUI();
+                if (lives <= 0) gameOver();
+            }
+        }
+
+        updateParticles();
+    }
+
+    function checkQuizTrigger() {
+        if (score > 0 && score % 5 === 0 && score !== lastQuizScore) {
+            lastQuizScore = score;
+            triggerQuiz();
+        }
+    }
+
+    function checkWinCondition() {
+        if (score >= 50) {
+            gameRunning = false;
+            startFireworks();
+            document.getElementById('winScore').innerText = score;
+            document.getElementById('victoryModal').style.display = 'block';
+        }
+    }
+
+    function gameOver() {
+        gameRunning = false;
+        document.getElementById('finalScore').innerText = score;
+        document.getElementById('gameOverModal').style.display = 'block';
+    }
+
+    function updateUI() {
+        document.getElementById('scoreDisplay').innerText = `Stars: ${score}`;
+        let shieldText = lives === 3 ? "100%" : (lives === 2 ? "66%" : "33%");
+        document.getElementById('livesDisplay').innerText = `Shield: ${shieldText}`;
+    }
+
+    function triggerQuiz() {
+        gamePaused = true;
+        const modal = document.getElementById('quizModal');
+        const qText = document.getElementById('quizQuestion');
+        const qOptions = document.getElementById('quizOptions');
+        const feedback = document.getElementById('quizFeedback');
+        
+        feedback.innerText = "";
+        
+        const qIndex = Math.floor(Math.random() * quizData.length);
+        const qData = quizData[qIndex];
+
+        qText.innerText = qData.q;
+        qOptions.innerHTML = '';
+
+        qData.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-btn';
+            btn.innerText = opt;
+            btn.onclick = () => handleQuizAnswer(index === qData.correct);
+            qOptions.appendChild(btn);
+        });
+
+        modal.style.display = 'block';
+    }
+
+    function handleQuizAnswer(isCorrect) {
+        const modal = document.getElementById('quizModal');
+        const feedback = document.getElementById('quizFeedback');
+
+        if (isCorrect) {
+            feedback.style.color = "#4CAF50";
+            feedback.innerText = "Correct! Good job!";
+            setTimeout(() => {
+                modal.style.display = 'none';
+                gamePaused = false;
+                loop();
+            }, 1000);
+        } else {
+            feedback.style.color = "#ff4757";
+            feedback.innerText = "Oops! -5 Stars.";
+            score = Math.max(0, score - 5);
+            updateUI();
+            setTimeout(() => {
+                modal.style.display = 'none';
+                gamePaused = false;
+                loop();
+            }, 1500);
+        }
+    }
+
+    function draw() {
+        drawBackground();
+
+        ctx.font = "70px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(playerEmoji, player.x + player.width/2, player.y + player.height);
+
+        items.forEach(f => {
+            ctx.font = "50px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+            ctx.fillText(f.emoji, f.x + f.width/2, f.y);
+        });
+
+        drawParticles();
+    }
+
+    function loop() {
+        if (!gameRunning) return;
+        update();
+        draw();
+        if (!gamePaused) {
+            requestAnimationFrame(loop);
+        }
+    }
+
+    function startFireworks() {
+        for(let i=0; i<150; i++) {
+            particles.push({
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                vx: (Math.random() - 0.5) * 20,
+                vy: (Math.random() - 0.5) * 20,
+                life: 100 + Math.random() * 50,
+                color: `hsl(${Math.random()*360}, 100%, 60%)`,
+                size: Math.random() * 4 + 2
+            });
+        }
+        animateFireworks();
+    }
+
+    function updateParticles() {
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.15;
+            p.life--;
+            if(p.life <= 0) particles.splice(i, 1);
+        }
+    }
+
+    function drawParticles() {
+        particles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    function animateFireworks() {
+        if(particles.length > 0) {
+             drawBackground();
+             draw(); 
+             updateParticles();
+             drawParticles();
+             requestAnimationFrame(animateFireworks);
+        }
+    }
+</script>
+</body>
+</html>

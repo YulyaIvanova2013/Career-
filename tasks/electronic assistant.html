@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 FUTURE CAREER – фон career.jpg</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        /* Фон всей страницы — career.jpg */
+        body {
+            background: url('career.jpg') center / cover no-repeat fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Легкое затемнение, чтобы карточка выделялась */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .career-card {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 248, 225, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 80px 80px 80px 80px;
+            padding: 40px 45px 45px;
+            border: 8px solid #ffea9e;
+            box-shadow: 0 30px 0 #d64f1e, 0 40px 40px -10px #a13b15;
+            transition: 0.2s;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* яркий заголовок */
+        .main-title {
+            font-size: 5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #c52828;
+            text-shadow: 6px 6px 0 #ffd571, 10px 10px 0 rgba(0, 0, 0, 0.1);
+            line-height: 1;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+            word-break: break-word;
+            background: linear-gradient(135deg, #cf3e0e, #fa7d1e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* контейнер с вопросами */
+        .questions-container {
+            background: #fef6d8;
+            border-radius: 70px;
+            padding: 40px 40px 30px 40px;
+            border: 6px solid #ffa74e;
+            box-shadow: inset 0 0 0 5px white, 0 20px 0 #c55f1a;
+            margin-bottom: 35px;
+        }
+
+        .question-list {
+            list-style: none;
+            counter-reset: question-counter;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .question-item {
+            counter-increment: question-counter;
+            padding: 28px 35px 28px 95px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2d3a;
+            background: #ffffff;
+            border-radius: 120px;
+            border: 5px solid #fd8f3d;
+            box-shadow: 0 10px 0 #b14b18, 0 15px 20px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: default;
+            line-height: 1.4;
+            word-break: break-word;
+            transition: 0.15s;
+        }
+
+        .question-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 0 #b14b18, 0 18px 25px rgba(0,0,0,0.15);
+            background: #fff9ea;
+        }
+
+        /* круглая нумерация — яркая, большая */
+        .question-item::before {
+            content: counter(question-counter);
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #f15f2c;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 2.4rem;
+            border: 5px solid #ffd58c;
+            box-shadow: 0 7px 0 #a33a0e;
+            transition: 0.1s;
+        }
+
+        /* навигация для красоты (как в образце) */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fecb8b;
+            padding: 15px 35px;
+            border-radius: 70px;
+            border: 5px solid #f2711c;
+            box-shadow: 0 12px 0 #aa4012;
+            font-weight: 700;
+            font-size: 1.9rem;
+            color: #361a03;
+        }
+
+        .nav-arrow {
+            background: #fff1bf;
+            padding: 10px 35px;
+            border-radius: 60px;
+            border: 4px solid #fa7328;
+            color: #b23b00;
+            font-size: 2rem;
+            box-shadow: 0 7px 0 #b1470f;
+            cursor: default;
+        }
+
+        /* адаптация для планшетов */
+        @media (max-width: 700px) {
+            .main-title { font-size: 3.5rem; }
+            .question-item { font-size: 1.5rem; padding: 22px 20px 22px 80px; }
+            .question-item::before { width: 50px; height: 50px; font-size: 2rem; left: 18px; }
+            .nav-arrow { font-size: 1.4rem; padding: 8px 20px; }
+        }
+
+        @media (max-width: 500px) {
+            .main-title { font-size: 2.5rem; }
+            .question-item { font-size: 1.3rem; padding: 18px 15px 18px 70px; }
+            .question-item::before { width: 45px; height: 45px; font-size: 1.7rem; left: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="career-card">
+        <!-- заголовок FUTURE CAREER ярко -->
+        <div class="main-title">
+            FUTURE CAREER
+        </div>
+
+        <!-- Основной список вопросов (только 6 вопросов) -->
+        <div class="questions-container">
+            <ul class="question-list">
+                <li class="question-item">What is your favourite school subject?</li>
+                <li class="question-item">What do you like to do in your free time?</li>
+                <li class="question-item">What part-time job would you like to do during your school holidays if any?</li>
+                <li class="question-item">What career would you like to choose after finishing school? Why?</li>
+                <li class="question-item">Do you think English will be useful in your future? In what way?</li>
+                <li class="question-item">What would you recommend a teenager who can’t choose a career?</li>
+            </ul>
+        </div>
+
+        <!-- стильная навигация как в исходном шаблоне -->
+        <div class="nav-footer">
+            <span class="nav-arrow">← предыдущий</span>
+            <span style="font-size: 2.8rem; color:#d14309;">💼</span>
+            <span class="nav-arrow">следующий →</span>
+        </div>
+
+        <!-- мелкая подпись в стиле "Банк ФИПИ" -->
+        <div style="margin-top: 20px; text-align: right; font-weight: 600; color: #4f2c0a; background: #ffc489; padding: 8px 25px; border-radius: 40px; display: inline-block; float: right;">
+            🎓 яркие вопросы · фон career.jpg
+        </div>
+    </div>
+</body>
+</html>

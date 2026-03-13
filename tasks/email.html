@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 ОГЭ Email Writing Practice - Choosing a Career</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f7ff 0%, #d6e4ff 50%, #adc8ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(41, 98, 255, 0.2);
+            overflow: hidden;
+            border: 5px solid #2962ff;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #2962ff 0%, #448aff 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header:before {
+            content: "🎓💼📚🌍💬";
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.2;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        .title span {
+            background: linear-gradient(45deg, #ffd600, #ffab00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            margin-top: 5px;
+        }
+
+        .emoji-header {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-wrapper {
+            padding: 0;
+            position: relative;
+        }
+
+        .email-container {
+            display: none;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .email-container.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .email-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 3px solid #448aff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-card:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #2962ff, #448aff);
+        }
+
+        .email-header {
+            background: linear-gradient(90deg, #e8f5e9, #c8e6c9);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 8px solid #2e7d32;
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.1);
+        }
+
+        .email-header p {
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            color: #1b5e20;
+            font-weight: 600;
+        }
+
+        .email-body {
+            background-color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 8px solid #ff9800;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.1);
+        }
+
+        .questions {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 8px solid #7b1fa2;
+            box-shadow: 0 5px 15px rgba(123, 31, 162, 0.1);
+        }
+
+        .questions h3 {
+            color: #7b1fa2;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .questions h3 i {
+            margin-right: 10px;
+            font-size: 1.6rem;
+        }
+
+        .question-item {
+            margin-bottom: 18px;
+            padding-left: 35px;
+            position: relative;
+            font-size: 1.15rem;
+            line-height: 1.5;
+            color: #7b1fa2;
+            font-weight: 500;
+        }
+
+        .question-item:before {
+            content: "💼";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.3rem;
+        }
+
+        .requirements {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 8px solid #ff9800;
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.1);
+        }
+
+        .requirements h4 {
+            color: #ef6c00;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .requirements h4 i {
+            margin-right: 10px;
+        }
+
+        .word-limit {
+            display: inline-block;
+            background: linear-gradient(90deg, #2962ff, #448aff);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 10px 0;
+            box-shadow: 0 4px 10px rgba(41, 98, 255, 0.3);
+        }
+
+        .task-note {
+            font-size: 1.05rem;
+            color: #ef6c00;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px 40px;
+            background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+            border-top: 3px dashed #2962ff;
+        }
+
+        .nav-btn {
+            padding: 16px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:active {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #prev-btn {
+            background: linear-gradient(90deg, #ff9800, #ef6c00);
+            color: white;
+        }
+
+        #next-btn {
+            background: linear-gradient(90deg, #2962ff, #0d47a1);
+            color: white;
+        }
+
+        .nav-btn i {
+            margin: 0 10px;
+            font-size: 1.3rem;
+        }
+
+        .email-counter {
+            background: linear-gradient(90deg, #2e7d32, #1b5e20);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.3);
+        }
+
+        .counter-number {
+            background: white;
+            color: #2e7d32;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: 900;
+            font-size: 1.4rem;
+        }
+
+        .career-icons {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            font-size: 2.5rem;
+            color: #ffd600;
+            opacity: 0.9;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(90deg, #2962ff 0%, #448aff 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 20px;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .title {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .email-container {
+                padding: 25px;
+            }
+            
+            .email-card {
+                padding: 25px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 20px;
+                padding: 25px;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .email-counter {
+                order: -1;
+            }
+            
+            .career-icons {
+                position: relative;
+                right: auto;
+                top: auto;
+                text-align: center;
+                margin-top: 15px;
+                font-size: 2rem;
+            }
+            
+            .emoji-header {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji-header">🎓💼📚🌐🗣️</div>
+            <h1 class="title">ОГЭ <span>Choosing a Career</span></h1>
+            <p class="subtitle">Email Writing Practice: Future Plans & Languages</p>
+            <div class="career-icons">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Письмо 1: Learning foreign languages (Ben) -->
+            <div class="email-container active" id="email-1">
+                <div class="email-card">
+                    <div class="email-header">
+                        <p><strong>From:</strong> Ben@mail.uk</p>
+                        <p><strong>To:</strong> Russian_friend@oge.ru</p>
+                        <p><strong>Subject:</strong> Learning foreign languages</p>
+                    </div>
+                    
+                    <div class="email-body">
+                        <p>I am so fond of Japanese cartoons that I've decided to learn Japanese. Mum says it's hard, but I think it's worth it. Besides, their writing is cool!</p>
+                    </div>
+                    
+                    <div class="questions">
+                        <h3><i class="fas fa-question-circle"></i> QUESTIONS TO ANSWER:</h3>
+                        <div class="question-item">What languages do you learn at school?</div>
+                        <div class="question-item">What other language would you like to learn and why?</div>
+                        <div class="question-item">What do you think about my choice of Japanese?</div>
+                    </div>
+                    
+                    <div class="requirements">
+                        <h4><i class="fas fa-tasks"></i> YOUR TASK:</h4>
+                        <p>Write a message to Ben and answer his 3 questions.</p>
+                        <div class="word-limit">100–120 WORDS</div>
+                        <p class="task-note">Remember the rules of email writing!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Письмо 2: Future career (Ben) -->
+            <div class="email-container" id="email-2">
+                <div class="email-card">
+                    <div class="email-header">
+                        <p><strong>From:</strong> Ben@mail.uk</p>
+                        <p><strong>To:</strong> Russian_friend@oge.ru</p>
+                        <p><strong>Subject:</strong> Future career</p>
+                    </div>
+                    
+                    <div class="email-body">
+                        <p>Yesterday I did a test to see which job is the best for me. According to the results I should become a doctor. But it is absolutely impossible because I am afraid of blood.</p>
+                    </div>
+                    
+                    <div class="questions">
+                        <h3><i class="fas fa-question-circle"></i> QUESTIONS TO ANSWER:</h3>
+                        <div class="question-item">What future career would you like to have, and why?</div>
+                        <div class="question-item">Do your parents agree with your choice?</div>
+                        <div class="question-item">In what way will English be useful for your career?</div>
+                    </div>
+                    
+                    <div class="requirements">
+                        <h4><i class="fas fa-tasks"></i> YOUR TASK:</h4>
+                        <p>Write a message to Ben and answer his 3 questions.</p>
+                        <div class="word-limit">100–120 WORDS</div>
+                        <p class="task-note">Remember the rules of email writing!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Письмо 3: Future profession (Sophie) -->
+            <div class="email-container" id="email-3">
+                <div class="email-card">
+                    <div class="email-header">
+                        <p><strong>From:</strong> Sophie@mail.uk</p>
+                        <p><strong>To:</strong> Russian_friend@oge.ru</p>
+                        <p><strong>Subject:</strong> Future profession</p>
+                    </div>
+                    
+                    <div class="email-body">
+                        <p>I love history so much that maybe I'll become a historian in the future.</p>
+                    </div>
+                    
+                    <div class="questions">
+                        <h3><i class="fas fa-question-circle"></i> QUESTIONS TO ANSWER:</h3>
+                        <div class="question-item">What school subjects do you find the most important?</div>
+                        <div class="question-item">Is there any school subject that you'd like to study more and why?</div>
+                        <div class="question-item">What career would you like to choose in the future?</div>
+                    </div>
+                    
+                    <div class="requirements">
+                        <h4><i class="fas fa-tasks"></i> YOUR TASK:</h4>
+                        <p>Write a message to Sophie and answer her 3 questions.</p>
+                        <div class="word-limit">100–120 WORDS</div>
+                        <p class="task-note">Remember the rules of email writing!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Письмо 4: Career plans (Alice) -->
+            <div class="email-container" id="email-4">
+                <div class="email-card">
+                    <div class="email-header">
+                        <p><strong>From:</strong> Alice@mail.uk</p>
+                        <p><strong>To:</strong> Russian_friend@oge.ru</p>
+                        <p><strong>Subject:</strong> Career plans</p>
+                    </div>
+                    
+                    <div class="email-body">
+                        <p>Time has come to choose a profession for the future. I'm still thinking about it but I really don't know what career to choose.</p>
+                    </div>
+                    
+                    <div class="questions">
+                        <h3><i class="fas fa-question-circle"></i> QUESTIONS TO ANSWER:</h3>
+                        <div class="question-item">What would you like to be in the future?</div>
+                        <div class="question-item">Will you use English for your future job?</div>
+                        <div class="question-item">What do your parents advise you to be?</div>
+                    </div>
+                    
+                    <div class="requirements">
+                        <h4><i class="fas fa-tasks"></i> YOUR TASK:</h4>
+                        <p>Write a message to Alice and answer her 3 questions.</p>
+                        <div class="word-limit">100–120 WORDS</div>
+                        <p class="task-note">Remember the rules of email writing!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Письмо 5: Learning foreign languages (Emily) -->
+            <div class="email-container" id="email-5">
+                <div class="email-card">
+                    <div class="email-header">
+                        <p><strong>From:</strong> Emily@mail.uk</p>
+                        <p><strong>To:</strong> Russian_friend@oge.ru</p>
+                        <p><strong>Subject:</strong> Learning foreign languages</p>
+                    </div>
+                    
+                    <div class="email-body">
+                        <p>We are having a Maths test tomorrow. It makes me feel scared! I would rather have three language tests instead of one Maths test. I really find learning foreign languages interesting and not difficult at all.</p>
+                    </div>
+                    
+                    <div class="questions">
+                        <h3><i class="fas fa-question-circle"></i> QUESTIONS TO ANSWER:</h3>
+                        <div class="question-item">What subject is the most difficult for you?</div>
+                        <div class="question-item">What do you do to improve your English?</div>
+                        <div class="question-item">What foreign language besides English would you like to learn and why?</div>
+                    </div>
+                    
+                    <div class="requirements">
+                        <h4><i class="fas fa-tasks"></i> YOUR TASK:</h4>
+                        <p>Write a message to Emily and answer her 3 questions.</p>
+                        <div class="word-limit">100–120 WORDS</div>
+                        <p class="task-note">Remember the rules of email writing!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Письмо 6: Future profession (Ann) -->
+            <div class="email-container" id="email-6">
+                <div class="email-card">
+                    <div class="email-header">
+                        <p><strong>From:</strong> Ann@mail.uk</p>
+                        <p><strong>To:</strong> Russian_friend@oge.ru</p>
+                        <p><strong>Subject:</strong> Future profession</p>
+                    </div>
+                    
+                    <div class="email-body">
+                        <p>I joined the ballet school when I was five. I love dancing and I want to become a dance teacher in the future. So I'm going to take classes at the Ballet Dance Academy one day.</p>
+                    </div>
+                    
+                    <div class="questions">
+                        <h3><i class="fas fa-question-circle"></i> QUESTIONS TO ANSWER:</h3>
+                        <div class="question-item">What subjects are you good at?</div>
+                        <div class="question-item">When did you begin studying?</div>
+                        <div class="question-item">What job would you like to do in the future, and why?</div>
+                    </div>
+                    
+                    <div class="requirements">
+                        <h4><i class="fas fa-tasks"></i> YOUR TASK:</h4>
+                        <p>Write a message to Ann and answer her 3 questions.</p>
+                        <div class="word-limit">100–120 WORDS</div>
+                        <p class="task-note">Remember the rules of email writing!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Письмо 7: Learning foreign languages (Ann) -->
+            <div class="email-container" id="email-7">
+                <div class="email-card">
+                    <div class="email-header">
+                        <p><strong>From:</strong> Ann@mail.uk</p>
+                        <p><strong>To:</strong> Russian_friend@oge.ru</p>
+                        <p><strong>Subject:</strong> Learning foreign languages</p>
+                    </div>
+                    
+                    <div class="email-body">
+                        <p>At school I have to choose a second foreign language to learn. The problem is that I cannot make a choice about what language to take.</p>
+                    </div>
+                    
+                    <div class="questions">
+                        <h3><i class="fas fa-question-circle"></i> QUESTIONS TO ANSWER:</h3>
+                        <div class="question-item">When did you start learning English?</div>
+                        <div class="question-item">What do you do to improve your English?</div>
+                        <div class="question-item">What foreign language besides English would you like to learn, and why?</div>
+                    </div>
+                    
+                    <div class="requirements">
+                        <h4><i class="fas fa-tasks"></i> YOUR TASK:</h4>
+                        <p>Write a message to Ann and answer her 3 questions.</p>
+                        <div class="word-limit">100–120 WORDS</div>
+                        <p class="task-note">Remember the rules of email writing!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Письмо 8: Career plans (Henry) -->
+            <div class="email-container" id="email-8">
+                <div class="email-card">
+                    <div class="email-header">
+                        <p><strong>From:</strong> Henry@mail.uk</p>
+                        <p><strong>To:</strong> Russian_friend@oge.ru</p>
+                        <p><strong>Subject:</strong> Career plans</p>
+                    </div>
+                    
+                    <div class="email-body">
+                        <p>My family runs a family business. My dad wants me to go into the family business after I finish school. But I'm not sure what I want to do in future.</p>
+                    </div>
+                    
+                    <div class="questions">
+                        <h3><i class="fas fa-question-circle"></i> QUESTIONS TO ANSWER:</h3>
+                        <div class="question-item">What are your career plans?</div>
+                        <div class="question-item">What career do your parents advise you to choose?</div>
+                        <div class="question-item">Is there any job you wouldn't agree to do, why yes or no?</div>
+                    </div>
+                    
+                    <div class="requirements">
+                        <h4><i class="fas fa-tasks"></i> YOUR TASK:</h4>
+                        <p>Write a message to Henry and answer his 3 questions.</p>
+                        <div class="word-limit">100–120 WORDS</div>
+                        <p class="task-note">Remember the rules of email writing!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn" id="prev-btn" disabled>
+                <i class="fas fa-arrow-left"></i> PREVIOUS EMAIL
+            </button>
+            
+            <div class="email-counter">
+                EMAIL <div class="counter-number" id="current-email">1</div> OF <div class="counter-number">8</div>
+            </div>
+            
+            <button class="nav-btn" id="next-btn">
+                NEXT EMAIL <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="footer">
+            <p>🎓 ОГЭ ENGLISH EXAM - CHOOSING A CAREER 🎓</p>
+            <p>Practice email writing about future plans, languages and professions!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailContainers = document.querySelectorAll('.email-container');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const currentEmailSpan = document.getElementById('current-email');
+            
+            let currentEmailIndex = 0;
+            const totalEmails = emailContainers.length;
+            
+            function updateEmailDisplay() {
+                // Убираем активный класс у всех писем
+                emailContainers.forEach(container => {
+                    container.classList.remove('active');
+                });
+                
+                // Добавляем активный класс текущему письму
+                emailContainers[currentEmailIndex].classList.add('active');
+                
+                // Обновляем счетчик
+                currentEmailSpan.textContent = currentEmailIndex + 1;
+                
+                // Обновляем состояние кнопок
+                prevBtn.disabled = currentEmailIndex === 0;
+                nextBtn.disabled = currentEmailIndex === totalEmails - 1;
+                
+                // Добавляем анимацию
+                emailContainers[currentEmailIndex].style.animation = 'none';
+                setTimeout(() => {
+                    emailContainers[currentEmailIndex].style.animation = 'slideIn 0.5s ease-out';
+                }, 10);
+            }
+            
+            // Обработчики кнопок
+            prevBtn.addEventListener('click', function() {
+                if (currentEmailIndex > 0) {
+                    currentEmailIndex--;
+                    updateEmailDisplay();
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                if (currentEmailIndex < totalEmails - 1) {
+                    currentEmailIndex++;
+                    updateEmailDisplay();
+                }
+            });
+            
+            // Инициализация
+            updateEmailDisplay();
+            
+            // Навигация с клавиатуры
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'ArrowLeft' && currentEmailIndex > 0) {
+                    currentEmailIndex--;
+                    updateEmailDisplay();
+                } else if (event.key === 'ArrowRight' && currentEmailIndex < totalEmails - 1) {
+                    currentEmailIndex++;
+                    updateEmailDisplay();
+                }
+            });
+            
+            // Добавляем эффект нажатия на кнопки
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    if (!this.disabled) {
+                        this.style.transform = 'translateY(-2px)';
+                    }
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    if (!this.disabled) {
+                        this.style.transform = 'translateY(-5px)';
+                    }
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    if (!this.disabled) {
+                        this.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monologues · FUTURE CAREER · lilac</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: large, clear, friendly -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f9f0ff 0%, #ecd9ff 70%, #dec5ff 100%);
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            position: relative;
+        }
+
+        /* soft floating shapes */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(200, 160, 255, 0.25);
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+            filter: blur(100px);
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background: rgba(220, 180, 250, 0.3);
+            border-radius: 50%;
+            bottom: -150px;
+            right: -50px;
+            filter: blur(120px);
+            z-index: 0;
+        }
+
+        .light-card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(255, 245, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid #caa6ff;
+            border-radius: 80px;
+            box-shadow: 0 25px 50px -12px #b78aff, 0 0 0 2px #ffffff inset;
+            padding: 3rem 2.8rem;
+        }
+
+        h1 {
+            font-size: 4.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #3c1b5e;
+            text-shadow: 0 2px 10px #e1c4ff;
+            word-break: break-word;
+            background: linear-gradient(135deg, #5f2b84, #9a4dff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subhead {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            background: #e9d2ff;
+            display: inline-block;
+            padding: 0.6rem 2.5rem;
+            border-radius: 60px;
+            margin: 0 auto 2rem;
+            border: 1px solid #c49eff;
+            box-shadow: 0 5px 0 #b282e0;
+            color: #2f0b4a;
+        }
+
+        .task-box {
+            background: #ffffffcc;
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 2.5rem 2.8rem;
+            margin: 2rem 0 2.5rem;
+            border: 2px solid #dbb5ff;
+            box-shadow: 0 15px 30px #dec1ff, inset 0 2px 10px white;
+        }
+
+        .task-box p {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d0f42;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .task-box ul {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .task-box li {
+            font-size: 1.8rem;
+            font-weight: 500;
+            padding: 1.3rem 1.8rem 1.3rem 4.8rem;
+            background: #f5eaff;
+            margin: 1.5rem 0;
+            border-radius: 100px;
+            border-left: 8px solid #b47aff;
+            border-right: 2px solid #d7b0ff;
+            box-shadow: 0 4px 10px #dec1ff, 0 4px 0 #b386e0;
+            color: #2e0b47;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .task-box li:hover {
+            background: #f1dcff;
+            border-left-color: #9f5be0;
+            transform: scale(1.01);
+        }
+
+        .task-box li::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f0a4";  /* hand-point-right */
+            font-weight: 900;
+            position: absolute;
+            left: 1.2rem;
+            top: 1.3rem;
+            color: #9f5be0;
+            font-size: 2.2rem;
+            text-shadow: 0 3px 8px #d7b0ff;
+        }
+
+        .task-box > p:last-child {
+            margin-top: 2rem;
+            background: #e3ceff;
+            padding: 1.2rem 2.5rem;
+            border-radius: 60px;
+            display: inline-block;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #3b1a57;
+            border: 2px solid #c49eff;
+            box-shadow: 0 5px 0 #b282e0;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 1rem;
+        }
+
+        .task-indicator {
+            background: #edd0ff;
+            padding: 1.2rem 2.8rem;
+            border-radius: 70px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #371a52;
+            border: 2px solid #c49eff;
+            box-shadow: 0 6px 0 #b282e0;
+        }
+
+        .task-indicator i {
+            color: #8f4fd6;
+            margin-right: 12px;
+        }
+
+        .next-btn {
+            background: linear-gradient(145deg, #b57aff, #9f5be0);
+            border: none;
+            color: white;
+            font-size: 2.6rem;
+            font-weight: 700;
+            padding: 1.4rem 4.5rem;
+            border-radius: 90px;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #6836a0, 0 15px 30px #dec1ff;
+            letter-spacing: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            border: 2px solid #f3e2ff;
+            transform: translateY(0);
+            transition: 0.1s ease;
+        }
+
+        .next-btn:active {
+            box-shadow: 0 3px 0 #6836a0;
+            transform: translateY(5px);
+        }
+
+        .next-btn:hover {
+            background: linear-gradient(145deg, #c28eff, #b16ef0);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 2.5rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: #f1e2ff;
+            padding: 1rem 2.8rem;
+            border-radius: 70px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border: 2px solid #c49eff;
+            color: #2e0b47;
+            box-shadow: 0 5px 0 #b282e0;
+        }
+
+        .footer-note i {
+            color: #8f4fd6;
+            margin: 0 8px;
+        }
+
+        @media (max-width: 700px) {
+            h1 { font-size: 3rem; }
+            .task-box li { font-size: 1.5rem; padding: 1rem 1rem 1rem 4rem; }
+            .next-btn { font-size: 2rem; padding: 1rem 2.5rem; }
+            .task-indicator { font-size: 1.6rem; }
+            .light-card { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="light-card">
+    <h1>🎤 FUTURE CAREER ✦</h1>
+    <div style="display: flex; justify-content: center;">
+        <div class="subhead"><i class="fa-regular fa-comment-dots" style="margin-right: 12px;"></i> three speaking tasks</div>
+    </div>
+
+    <!-- dynamic task display -->
+    <div class="task-box" id="taskDisplay"></div>
+
+    <!-- bottom row -->
+    <div class="pagination">
+        <div class="task-indicator">
+            <i class="fa-regular fa-file-lines"></i>
+            <span id="taskCounter">1 / 3</span>
+        </div>
+        <button class="next-btn" id="nextTaskBtn">
+            <span>NEXT</span>
+            <i class="fa-regular fa-circle-right"></i>
+        </button>
+    </div>
+
+    <div class="footer-note">
+        <i class="fa-regular fa-lightbulb"></i> click NEXT to browse all three tasks <i class="fa-regular fa-lightbulb"></i>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // tasks content exactly as before, but we ensure no "neon" text
+        const tasks = [
+            `<p><i class="fa-regular fa-pen-to-square" style="margin-right: 10px;"></i> You are going to give a talk about <strong>your career plans</strong>. You will have to start in 1.5 minutes and speak for not more than 2 minutes (10-12 sentences).</p>
+            <ul>
+                <li>what job you want to do in the future</li>
+                <li>what two subjects you think are the most important for your future job, and why</li>
+                <li>whether your family approve of your career choice or not</li>
+                <li>what your attitude to working online is</li>
+            </ul>
+            <p>⏳ You have to talk continuously.</p>`,
+            `<p><i class="fa-regular fa-pen-to-square" style="margin-right: 10px;"></i> You are going to give a talk about <strong>your career choice</strong>. You will have to start in 1.5 minutes and speak for not more than 2 minutes (10-12 sentences).</p>
+            <ul>
+                <li>what job and education opportunities young people have after finishing the 9th form</li>
+                <li>what job you would like to do in the future, explain your choice</li>
+                <li>what advice your parents have given you about your career choice</li>
+                <li>what your attitude to working online is</li>
+            </ul>
+            <p>⏳ You have to talk continuously.</p>`,
+            `<p><i class="fa-regular fa-pen-to-square" style="margin-right: 10px;"></i> You are going to give a talk about <strong>your career choice</strong>. You will have to start in 1.5 minutes and speak for not more than 2 minutes (10-12 sentences).</p>
+            <ul>
+                <li>what jobs, in your opinion, will be popular in the future, and why</li>
+                <li>what sort of job you would like to do</li>
+                <li>what school subjects will be important for your future job</li>
+                <li>what your attitude to working online is</li>
+            </ul>
+            <p>⏳ You have to talk continuously.</p>`
+        ];
+
+        let currentIdx = 0;
+        const taskDisplay = document.getElementById('taskDisplay');
+        const taskCounter = document.getElementById('taskCounter');
+        const nextBtn = document.getElementById('nextTaskBtn');
+
+        function updateTask(index) {
+            taskDisplay.innerHTML = tasks[index];
+            taskCounter.textContent = `${index+1} / 3`;
+            // soft pulse effect
+            taskDisplay.style.transition = 'box-shadow 0.2s, transform 0.2s';
+            taskDisplay.style.boxShadow = '0 20px 40px #dbb5ff, inset 0 2px 15px white';
+            taskDisplay.style.transform = 'scale(1.005)';
+            setTimeout(() => {
+                taskDisplay.style.boxShadow = '0 15px 30px #dec1ff, inset 0 2px 10px white';
+                taskDisplay.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        updateTask(0);
+
+        nextBtn.addEventListener('click', function() {
+            currentIdx = (currentIdx + 1) % tasks.length;
+            updateTask(currentIdx);
+        });
+    })();
+</script>
+
+</body>
+</html>
